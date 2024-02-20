@@ -1,0 +1,5 @@
+const Registration = artifacts.require("RegistrationContract");
+
+module.exports = function (deployer) {
+  deployer.deploy(Registration);
+};
