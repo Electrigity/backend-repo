@@ -6,10 +6,28 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
+						"indexed": true,
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					}
+				],
+				"name": "UserDeleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
 						"internalType": "address",
 						"name": "userAddress",
 						"type": "address"
@@ -22,9 +40,15 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "string",
-						"name": "location",
-						"type": "string"
+						"internalType": "int256",
+						"name": "latitude",
+						"type": "int256"
+					},
+					{
+						"indexed": false,
+						"internalType": "int256",
+						"name": "longitude",
+						"type": "int256"
 					},
 					{
 						"indexed": false,
@@ -46,7 +70,7 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
 						"name": "userAddress",
 						"type": "address"
@@ -59,9 +83,15 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "string",
-						"name": "location",
-						"type": "string"
+						"internalType": "int256",
+						"name": "latitude",
+						"type": "int256"
+					},
+					{
+						"indexed": false,
+						"internalType": "int256",
+						"name": "longitude",
+						"type": "int256"
 					},
 					{
 						"indexed": false,
@@ -80,34 +110,13 @@
 				"type": "event"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_user",
-						"type": "address"
-					}
-				],
-				"name": "getUserInfo",
+				"inputs": [],
+				"name": "admin",
 				"outputs": [
 					{
-						"internalType": "string",
-						"name": "username",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "location",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "energyBalance",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "tokensBalance",
-						"type": "uint256"
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -117,7 +126,129 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_user",
+						"name": "_userAddress",
+						"type": "address"
+					}
+				],
+				"name": "deleteUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getAllUsersInfo",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "username",
+								"type": "string"
+							},
+							{
+								"internalType": "int256",
+								"name": "latitude",
+								"type": "int256"
+							},
+							{
+								"internalType": "int256",
+								"name": "longitude",
+								"type": "int256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "energyBalance",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "tokensBalance",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "isRegistered",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct Main.UserInfo[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getUserAddresses",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					}
+				],
+				"name": "getUserInfo",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "username",
+								"type": "string"
+							},
+							{
+								"internalType": "int256",
+								"name": "latitude",
+								"type": "int256"
+							},
+							{
+								"internalType": "int256",
+								"name": "longitude",
+								"type": "int256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "energyBalance",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "tokensBalance",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "isRegistered",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct Main.UserInfo",
+						"name": "userInfo",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userAddress",
 						"type": "address"
 					}
 				],
@@ -140,9 +271,14 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string",
-						"name": "_location",
-						"type": "string"
+						"internalType": "int256",
+						"name": "_latitude",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "_longitude",
+						"type": "int256"
 					},
 					{
 						"internalType": "uint256",
@@ -155,7 +291,40 @@
 						"type": "uint256"
 					}
 				],
-				"name": "registerOrUpdate",
+				"name": "registerUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_username",
+						"type": "string"
+					},
+					{
+						"internalType": "int256",
+						"name": "_latitude",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "_longitude",
+						"type": "int256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_energyBalance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokensBalance",
+						"type": "uint256"
+					}
+				],
+				"name": "updateUser",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -176,9 +345,14 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string",
-						"name": "location",
-						"type": "string"
+						"internalType": "int256",
+						"name": "latitude",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "longitude",
+						"type": "int256"
 					},
 					{
 						"internalType": "uint256",
@@ -228,11 +402,11 @@
 	},
 	"sources": {
 		"contracts/Main.sol": {
-			"keccak256": "0x7a3d242ce7d2ac989c592bb30f0769c4c1d12a1a9cc76f67d062a23be693a708",
+			"keccak256": "0xb5b588815c16a3aae68edea663e288484875ab3b9f7dc5e2a6d4cbd30a8d0fe7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://10d8bd1510ae1c1a1be55978888e00a75c865ec8a3f9936f8fb20d29b7ea8833",
-				"dweb:/ipfs/QmdxsNLaPrBgdr497XJ9LPdzQZ596K2o96Ji6DkYGRg3FE"
+				"bzz-raw://dd1e1f4275e1c2b86fef1bf340b8adb8d9ed6aef52ea4febc4d4d3890d6dd524",
+				"dweb:/ipfs/QmdraxCnrCLQjvoxLACaUe2dXoeL4RQozkQi2YazgME3B2"
 			]
 		}
 	},
