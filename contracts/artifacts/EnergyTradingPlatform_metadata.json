@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.20+commit.a1b79de6"
+		"version": "0.8.24+commit.e11b9ed9"
 	},
 	"language": "Solidity",
 	"output": {
@@ -9,6 +9,56 @@
 				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "transactionId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "accepted",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "status",
+						"type": "string"
+					}
+				],
+				"name": "TransactionCommitted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "transactionId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "receiver",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum EnergyTradingPlatform.TransactionType",
+						"name": "transactionType",
+						"type": "uint8"
+					}
+				],
+				"name": "TransactionInitiated",
+				"type": "event"
 			},
 			{
 				"anonymous": false,
@@ -125,6 +175,24 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_transactionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "_accepted",
+						"type": "bool"
+					}
+				],
+				"name": "commitTransaction",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "_userAddress",
 						"type": "address"
@@ -133,6 +201,126 @@
 				"name": "deleteUser",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getAllCommittedTransactions",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "initiator",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "receiver",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "energyAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "price",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "validUntil",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "committed",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "status",
+								"type": "string"
+							},
+							{
+								"internalType": "enum EnergyTradingPlatform.TransactionType",
+								"name": "transactionType",
+								"type": "uint8"
+							}
+						],
+						"internalType": "struct EnergyTradingPlatform.Transaction[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getAllPendingTransactions",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "initiator",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "receiver",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "energyAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "price",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "validUntil",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "committed",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "status",
+								"type": "string"
+							},
+							{
+								"internalType": "enum EnergyTradingPlatform.TransactionType",
+								"name": "transactionType",
+								"type": "uint8"
+							}
+						],
+						"internalType": "struct EnergyTradingPlatform.Transaction[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -172,9 +360,22 @@
 								"type": "bool"
 							}
 						],
-						"internalType": "struct Main.UserInfo[]",
+						"internalType": "struct EnergyTradingPlatform.UserInfo[]",
 						"name": "",
 						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getNumberOfNotCommittedTransactions",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -236,12 +437,50 @@
 								"type": "bool"
 							}
 						],
-						"internalType": "struct Main.UserInfo",
+						"internalType": "struct EnergyTradingPlatform.UserInfo",
 						"name": "userInfo",
 						"type": "tuple"
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_sender",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "receiver",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_energyAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_validUntil",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isBuyTransaction",
+						"type": "bool"
+					}
+				],
+				"name": "initiateTransaction",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -258,6 +497,25 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "pendingTransactions",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -294,6 +552,65 @@
 				"name": "registerUser",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "transactions",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "initiator",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "receiver",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "energyAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "validUntil",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "committed",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "status",
+						"type": "string"
+					},
+					{
+						"internalType": "enum EnergyTradingPlatform.TransactionType",
+						"name": "transactionType",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -405,7 +722,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Main.sol": "Main"
+			"contracts/EnergyTradingEscrow.sol": "EnergyTradingPlatform"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -419,12 +736,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/Main.sol": {
-			"keccak256": "0x1695f464714bdf7e7d93f4abef7ce3a02d27f505abf36c44387ea3dfd66932c0",
+		"contracts/EnergyTradingEscrow.sol": {
+			"keccak256": "0xa2624647330ccc6cf9240735998902f7934c018bf0303424aabd3f5ef1c56b99",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3fbdc586dac1b442785778a0cca171d8a27781b6ff8020d69d1adda33ec8e5c9",
-				"dweb:/ipfs/QmZxYCsu2gg6D3gJ6UFGFs3Zr5VnoumwKe5X2dvSdL9GZM"
+				"bzz-raw://895e0a24bc953d7d49c6718a53a9b4b5b534bb1952b1e7984ca84a1d951721dd",
+				"dweb:/ipfs/QmdEM1ZFkWkKzLJCANsmxFw5KpPJtAA7ZTSfVbwm78Fcg4"
 			]
 		}
 	},
