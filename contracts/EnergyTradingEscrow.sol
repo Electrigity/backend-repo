@@ -1,13 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./MyERC20.sol";
+
 contract EnergyTradingPlatform {
+    MyERC20 public token;
+
     struct UserInfo {
+        address userAddress;
         string username;
+        uint256 EGYTokenBalance;
         int256 latitude;
         int256 longitude;
         uint256 energyBalance;
-        uint256 tokensBalance;
         bool isRegistered;
     }
 
@@ -41,16 +47,14 @@ contract EnergyTradingPlatform {
         string username,
         int256 latitude,
         int256 longitude,
-        uint256 energyBalance,
-        uint256 tokensBalance
+        uint256 energyBalance
     );
     event UserUpdated(
         address indexed userAddress,
         string username,
         int256 latitude,
         int256 longitude,
-        uint256 energyBalance,
-        uint256 tokensBalance
+        uint256 energyBalance
     );
     event UserDeleted(address indexed userAddress);
     event TransactionInitiated(
@@ -64,8 +68,9 @@ contract EnergyTradingPlatform {
         string status
     );
 
-    constructor() {
+    constructor(address tokenAddress) {
         admin = msg.sender;
+        token = MyERC20(tokenAddress);
     }
 
     modifier onlyAdmin() {
@@ -77,30 +82,30 @@ contract EnergyTradingPlatform {
         require(!users[msg.sender].isRegistered, "User already registered.");
         _;
     }
-
     function registerUser(
         string memory _username,
         int256 _latitude,
         int256 _longitude,
-        uint256 _energyBalance,
-        uint256 _tokensBalance
+        uint256 _energyBalance
     ) public notRegistered {
         UserInfo storage newUser = users[msg.sender];
+        newUser.userAddress = msg.sender;
         newUser.username = _username;
         newUser.latitude = _latitude;
         newUser.longitude = _longitude;
         newUser.energyBalance = _energyBalance;
-        newUser.tokensBalance = _tokensBalance;
         newUser.isRegistered = true;
-
+        newUser.EGYTokenBalance = 20 * (10 ** uint256(token.decimals()));
         userAddresses.push(msg.sender);
+
+        token.mint(msg.sender, newUser.EGYTokenBalance);
+
         emit UserRegistered(
             msg.sender,
             _username,
             _latitude,
             _longitude,
-            _energyBalance,
-            _tokensBalance
+            _energyBalance
         );
     }
 
@@ -108,8 +113,7 @@ contract EnergyTradingPlatform {
         string memory _username,
         int256 _latitude,
         int256 _longitude,
-        uint256 _energyBalance,
-        uint256 _tokensBalance
+        uint256 _energyBalance
     ) public {
         require(users[msg.sender].isRegistered, "User is not registered.");
         UserInfo storage user = users[msg.sender];
@@ -117,14 +121,12 @@ contract EnergyTradingPlatform {
         user.latitude = _latitude;
         user.longitude = _longitude;
         user.energyBalance = _energyBalance;
-        user.tokensBalance = _tokensBalance;
         emit UserUpdated(
             msg.sender,
             _username,
             _latitude,
             _longitude,
-            _energyBalance,
-            _tokensBalance
+            _energyBalance
         );
     }
 
@@ -163,9 +165,10 @@ contract EnergyTradingPlatform {
 
         if (isBuyTransaction) {
             require(
-                users[_sender].tokensBalance >= _price,
+                token.balanceOf(_sender) >= _price,
                 "Sender has insufficient tokens for transaction."
             );
+
             require(
                 users[receiver].energyBalance >= _energyAmount,
                 "Receiver does not have enough energy."
@@ -176,8 +179,8 @@ contract EnergyTradingPlatform {
                 "Sender has insufficient energy for transaction."
             );
             require(
-                users[receiver].tokensBalance >= _price,
-                "Receiver has insufficient tokens to buy energy."
+                token.balanceOf(receiver) >= _price,
+                "Sender has insufficient tokens for transaction."
             );
         }
 
@@ -199,6 +202,16 @@ contract EnergyTradingPlatform {
             receiver,
             isBuyTransaction ? TransactionType.Buy : TransactionType.Sell
         );
+    }
+
+    function approveTokens(uint256 amount) public {
+        token.approve(address(this), amount);
+    }
+
+    function getUserTokenBalance(
+        address userAddress
+    ) public view returns (uint256) {
+        return token.balanceOf(userAddress);
     }
 
     function commitTransaction(uint _transactionId, bool _accepted) public {
@@ -229,20 +242,53 @@ contract EnergyTradingPlatform {
             : "Rejected";
         removePendingTransaction(_transactionId);
         committedTransactions.push(_transactionId);
+
         if (_accepted) {
             Transaction storage transaction = transactions[_transactionId];
+
             if (transaction.transactionType == TransactionType.Buy) {
-                users[transaction.initiator].tokensBalance -= transaction.price;
-                users[transaction.receiver].tokensBalance += transaction.price;
+                require(
+                    token.balanceOf(transaction.initiator) >= transaction.price,
+                    "Initiator has insufficient EGY tokens."
+                );
+                require(
+                    users[transaction.receiver].energyBalance >=
+                        transaction.energyAmount,
+                    "Receiver does not have enough energy."
+                );
+                token.transferFrom(
+                    transaction.initiator,
+                    transaction.receiver,
+                    transaction.price
+                );
+                users[transaction.initiator].EGYTokenBalance -= transaction
+                    .price;
+                users[transaction.receiver].EGYTokenBalance += transaction
+                    .price;
 
                 users[transaction.initiator].energyBalance += transaction
                     .energyAmount;
                 users[transaction.receiver].energyBalance -= transaction
                     .energyAmount;
             } else if (transaction.transactionType == TransactionType.Sell) {
-                users[transaction.initiator].tokensBalance += transaction.price;
-                users[transaction.receiver].tokensBalance -= transaction.price;
-
+                require(
+                    token.balanceOf(transaction.receiver) >= transaction.price,
+                    "Receiver has insufficient EGY tokens."
+                );
+                require(
+                    users[transaction.initiator].energyBalance >=
+                        transaction.energyAmount,
+                    "Initiator does not have enough energy."
+                );
+                token.transferFrom(
+                    transaction.receiver,
+                    transaction.initiator,
+                    transaction.price
+                );
+                users[transaction.initiator].EGYTokenBalance += transaction
+                    .price;
+                users[transaction.receiver].EGYTokenBalance -= transaction
+                    .price;
                 users[transaction.initiator].energyBalance -= transaction
                     .energyAmount;
                 users[transaction.receiver].energyBalance += transaction
@@ -322,6 +368,95 @@ contract EnergyTradingPlatform {
             committedData[i] = transactions[committedTransactions[i]];
         }
         return committedData;
+    }
+    function getNotCommittedTransactionsCount(
+        address userAddress
+    ) public view returns (uint) {
+        uint count = 0;
+        for (uint i = 0; i < pendingTransactions.length; i++) {
+            Transaction storage transaction = transactions[
+                pendingTransactions[i]
+            ];
+            if (
+                transaction.initiator == userAddress && !transaction.committed
+            ) {
+                count++;
+            }
+        }
+        return count;
+    }
+    function getUserPendingTransactions(
+        address userAddress
+    ) public view returns (uint[] memory) {
+        uint[] memory temp = new uint[](pendingTransactions.length);
+        uint count = 0;
+
+        for (uint i = 0; i < pendingTransactions.length; i++) {
+            if (
+                transactions[pendingTransactions[i]].initiator == userAddress ||
+                transactions[pendingTransactions[i]].receiver == userAddress
+            ) {
+                temp[count] = pendingTransactions[i];
+                count++;
+            }
+        }
+
+        uint[] memory result = new uint[](count);
+        for (uint i = 0; i < count; i++) {
+            result[i] = temp[i];
+        }
+
+        return result;
+    }
+    function getUserCommittedTransactions(
+        address userAddress
+    ) public view returns (uint[] memory) {
+        uint[] memory temp = new uint[](committedTransactions.length);
+        uint count = 0;
+
+        for (uint i = 0; i < committedTransactions.length; i++) {
+            Transaction storage transaction = transactions[
+                committedTransactions[i]
+            ];
+            if (
+                transaction.initiator == userAddress ||
+                transaction.receiver == userAddress
+            ) {
+                temp[count] = committedTransactions[i];
+                count++;
+            }
+        }
+
+        uint[] memory result = new uint[](count);
+        for (uint i = 0; i < count; i++) {
+            result[i] = temp[i];
+        }
+
+        return result;
+    }
+
+    function getAllUserTransactions(
+        address userAddress
+    ) public view returns (uint[] memory) {
+        uint[] memory temp = new uint[](nextTransactionId - 1);
+        uint count = 0;
+
+        for (uint i = 1; i < nextTransactionId; i++) {
+            if (
+                transactions[i].initiator == userAddress ||
+                transactions[i].receiver == userAddress
+            ) {
+                temp[count] = i;
+                count++;
+            }
+        }
+
+        uint[] memory result = new uint[](count);
+        for (uint i = 0; i < count; i++) {
+            result[i] = temp[i];
+        }
+
+        return result;
     }
 
     function updateEnergyBalance(
