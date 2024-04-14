@@ -921,11 +921,11 @@
 			]
 		},
 		"contracts/EnergyTradingEscrow.sol": {
-			"keccak256": "0x1325b52874ecac01b28d1274ed80855bb96525e184979ea0dccd01c65e2945e7",
+			"keccak256": "0xb26b3e93917a005893dd90fb17850c3290e894ccd6413709f07a6a1cf559db29",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ea476437e0b5f300552c356ad631726a2deada0cc0e8f3d332995a603d46e40e",
-				"dweb:/ipfs/QmXZNKVjQJ9vryy5t7ABnfc6ajNaHw5oqksKgxKuKMkjcP"
+				"bzz-raw://57eee5f9483f6117d351ea9987a409147132f553e836ee938ccc88a944f32aa7",
+				"dweb:/ipfs/QmdfozNc7Eys4JYmo9NfB1QGQp2TChEmeH6UurGc72dkKh"
 			]
 		},
 		"contracts/MyERC20.sol": {

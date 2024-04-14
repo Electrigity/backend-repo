@@ -11,8 +11,8 @@ contract EnergyTradingPlatform {
         address userAddress;
         string username;
         uint256 EGYTokenBalance;
-        int256 latitude;
-        int256 longitude;
+        string latitude;
+        string longitude;
         uint256 energyBalance;
         bool isRegistered;
     }
@@ -26,12 +26,31 @@ contract EnergyTradingPlatform {
         uint validUntil;
         bool committed;
         string status;
+        uint initialDate;
         TransactionType transactionType;
     }
-
+    struct TradingInfo {
+        address userAddress;
+        string tradingStatus;
+        uint256 buySellAmount;
+        uint256 price;
+        uint256 expiryDate;
+    }
     enum TransactionType {
         Buy,
         Sell
+    }
+    struct CombinedUserInfo {
+        address userAddress;
+        string username;
+        uint256 EGYTokenBalance;
+        uint256 energyBalance;
+        string latitude;
+        string longitude;
+        string tradingStatus;
+        uint256 buySellAmount;
+        uint256 price;
+        uint256 expiryDate;
     }
 
     address[] private userAddresses;
@@ -41,6 +60,7 @@ contract EnergyTradingPlatform {
     mapping(uint => Transaction) public transactions;
     uint[] public pendingTransactions;
     uint[] private committedTransactions;
+    mapping(address => TradingInfo) public tradingInfos;
 
     event UserRegistered(
         address indexed userAddress,
@@ -66,6 +86,13 @@ contract EnergyTradingPlatform {
         uint transactionId,
         bool accepted,
         string status
+    );
+    event TradingInfoUpdated(
+        address indexed userAddress,
+        string tradingStatus,
+        uint256 expiryDate,
+        uint256 buySellAmount,
+        uint256 price
     );
 
     constructor(address tokenAddress) {
@@ -107,6 +134,7 @@ contract EnergyTradingPlatform {
             _longitude,
             _energyBalance
         );
+        initializeTradingInfo(msg.sender);
     }
 
     function updateUser(
@@ -148,6 +176,98 @@ contract EnergyTradingPlatform {
         emit UserDeleted(_userAddress);
     }
 
+    function initializeTradingInfo(address userAddress) internal {
+        TradingInfo storage newTradingInfo = tradingInfos[userAddress];
+        newTradingInfo.userAddress = userAddress;
+        newTradingInfo.tradingStatus = "NotTrading";
+        newTradingInfo.buySellAmount = 0;
+        newTradingInfo.price = 0;
+        newTradingInfo.expiryDate = 0;
+    }
+
+    function getTradingInfo(
+        address userAddress
+    ) public view returns (TradingInfo memory) {
+        require(users[userAddress].isRegistered, "User is not registered.");
+
+        return tradingInfos[userAddress];
+    }
+
+    function updateTradingUserInfo(
+        string memory _tradingStatus,
+        uint256 _expiryDate,
+        uint256 _buySellAmount,
+        uint256 _price
+    ) public {
+        require(users[msg.sender].isRegistered, "User is not registered.");
+
+        TradingInfo storage userTradingInfo = tradingInfos[msg.sender];
+        userTradingInfo.tradingStatus = _tradingStatus;
+        userTradingInfo.expiryDate = _expiryDate;
+        userTradingInfo.buySellAmount = _buySellAmount;
+        userTradingInfo.price = _price;
+
+        emit TradingInfoUpdated(
+            msg.sender,
+            _tradingStatus,
+            _expiryDate,
+            _buySellAmount,
+            _price
+        );
+    }
+    function getActiveTraders()
+        public
+        view
+        returns (CombinedUserInfo[] memory)
+    {
+        uint activeCount = 0;
+        for (uint i = 0; i < userAddresses.length; i++) {
+            if (
+                keccak256(
+                    bytes(tradingInfos[userAddresses[i]].tradingStatus)
+                ) ==
+                keccak256("Buying") ||
+                keccak256(
+                    bytes(tradingInfos[userAddresses[i]].tradingStatus)
+                ) ==
+                keccak256("Selling")
+            ) {
+                activeCount++;
+            }
+        }
+
+        CombinedUserInfo[] memory activeTraders = new CombinedUserInfo[](
+            activeCount
+        );
+        uint currentIndex = 0;
+        for (uint i = 0; i < userAddresses.length; i++) {
+            address userAddress = userAddresses[i];
+            TradingInfo storage tradingInfo = tradingInfos[userAddress];
+            UserInfo storage userInfo = users[userAddress];
+
+            if (
+                keccak256(bytes(tradingInfo.tradingStatus)) ==
+                keccak256("Buying") ||
+                keccak256(bytes(tradingInfo.tradingStatus)) ==
+                keccak256("Selling")
+            ) {
+                activeTraders[currentIndex] = CombinedUserInfo({
+                    userAddress: userAddress,
+                    username: userInfo.username,
+                    EGYTokenBalance: userInfo.EGYTokenBalance,
+                    energyBalance: userInfo.energyBalance,
+                    latitude: userInfo.latitude,
+                    longitude: userInfo.longitude,
+                    tradingStatus: tradingInfo.tradingStatus,
+                    buySellAmount: tradingInfo.buySellAmount,
+                    price: tradingInfo.price,
+                    expiryDate: tradingInfo.expiryDate
+                });
+                currentIndex++;
+            }
+        }
+        return activeTraders;
+    }
     function initiateTransaction(
         address _sender,
         address receiver,
@@ -194,6 +314,7 @@ contract EnergyTradingPlatform {
             _validUntil,
             false,
             "Pending",
+            block.timestamp,
             isBuyTransaction ? TransactionType.Buy : TransactionType.Sell
         );
         pendingTransactions.push(transactionId);
@@ -240,8 +361,6 @@ contract EnergyTradingPlatform {
         transactions[_transactionId].status = _accepted
             ? "Accepted"
             : "Rejected";
-        removePendingTransaction(_transactionId);
-        committedTransactions.push(_transactionId);
 
         if (_accepted) {
             Transaction storage transaction = transactions[_transactionId];
@@ -295,6 +414,17 @@ contract EnergyTradingPlatform {
                     .energyAmount;
             }
         }
+        removePendingTransaction(_transactionId);
+
+        committedTransactions.push(_transactionId);
+
+        TradingInfo storage userTradingInfo = tradingInfos[
+            transactions[_transactionId].receiver
+        ];
+        userTradingInfo.tradingStatus = "NotTrading";
+        userTradingInfo.expiryDate = 0;
+        userTradingInfo.buySellAmount = 0;
+        userTradingInfo.price = 0;
 
         emit TransactionCommitted(
             _transactionId,
@@ -377,9 +507,7 @@ contract EnergyTradingPlatform {
             Transaction storage transaction = transactions[
                 pendingTransactions[i]
             ];
-            if (
-                transaction.initiator == userAddress && !transaction.committed
-            ) {
+            if (transaction.receiver == userAddress && !transaction.committed) {
                 count++;
             }
         }
