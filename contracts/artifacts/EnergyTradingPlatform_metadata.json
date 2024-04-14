@@ -20,6 +20,43 @@
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "tradingStatus",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "expiryDate",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "buySellAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					}
+				],
+				"name": "TradingInfoUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "transactionId",
@@ -212,6 +249,71 @@
 			},
 			{
 				"inputs": [],
+				"name": "getActiveTraders",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "userAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "username",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "EGYTokenBalance",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "energyBalance",
+								"type": "uint256"
+							},
+							{
+								"internalType": "int256",
+								"name": "latitude",
+								"type": "int256"
+							},
+							{
+								"internalType": "int256",
+								"name": "longitude",
+								"type": "int256"
+							},
+							{
+								"internalType": "string",
+								"name": "tradingStatus",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "buySellAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "price",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "expiryDate",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct EnergyTradingPlatform.CombinedUserInfo[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "getAllCommittedTransactions",
 				"outputs": [
 					{
@@ -255,6 +357,11 @@
 								"internalType": "string",
 								"name": "status",
 								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "initialDate",
+								"type": "uint256"
 							},
 							{
 								"internalType": "enum EnergyTradingPlatform.TransactionType",
@@ -315,6 +422,11 @@
 								"internalType": "string",
 								"name": "status",
 								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "initialDate",
+								"type": "uint256"
 							},
 							{
 								"internalType": "enum EnergyTradingPlatform.TransactionType",
@@ -426,6 +538,52 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					}
+				],
+				"name": "getTradingInfo",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "userAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "tradingStatus",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "buySellAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "price",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "expiryDate",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct EnergyTradingPlatform.TradingInfo",
+						"name": "",
+						"type": "tuple"
 					}
 				],
 				"stateMutability": "view",
@@ -677,6 +835,45 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "tradingInfos",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "tradingStatus",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "buySellAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiryDate",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -725,6 +922,11 @@
 						"type": "string"
 					},
 					{
+						"internalType": "uint256",
+						"name": "initialDate",
+						"type": "uint256"
+					},
+					{
 						"internalType": "enum EnergyTradingPlatform.TransactionType",
 						"name": "transactionType",
 						"type": "uint8"
@@ -747,6 +949,34 @@
 					}
 				],
 				"name": "updateEnergyBalance",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_tradingStatus",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_expiryDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_buySellAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_price",
+						"type": "uint256"
+					}
+				],
+				"name": "updateTradingUserInfo",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -921,11 +1151,11 @@
 			]
 		},
 		"contracts/EnergyTradingEscrow.sol": {
-			"keccak256": "0xb26b3e93917a005893dd90fb17850c3290e894ccd6413709f07a6a1cf559db29",
+			"keccak256": "0x6d45c540dc78859c210ff2d71bc84cf5ed7ed16c1ffb557098ff00edbb156e0f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://57eee5f9483f6117d351ea9987a409147132f553e836ee938ccc88a944f32aa7",
-				"dweb:/ipfs/QmdfozNc7Eys4JYmo9NfB1QGQp2TChEmeH6UurGc72dkKh"
+				"bzz-raw://d73dc490fcb1445e2c269f6e2493f5ccc84eed8c14a5645988c664486d4c4563",
+				"dweb:/ipfs/QmZ4Yz63yVR4RaEa5keQ7N52CmdifsqAUuT4U23Nkf8sZq"
 			]
 		},
 		"contracts/MyERC20.sol": {
