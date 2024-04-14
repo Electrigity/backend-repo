@@ -5,9 +5,9 @@ contract Main {
     struct UserInfo {
         string username;
         int256 latitude;
-        int256 longitude;
-        uint256 energyBalance;
-        uint256 tokensBalance;
+        int256 longitude; 
+        uint256 energyBalance; 
+        uint256 tokensBalance; 
         bool isRegistered;
     }
 
@@ -19,42 +19,30 @@ contract Main {
         uint256 expiryDate; // Represented as a Unix timestamp
     }
 
-    address[] private userAddresses;
-    mapping(address => UserInfo) public users;
+     address[] private userAddresses;
+    mapping(address => UserInfo) public users; 
     mapping(address => TradingInfo) public tradingInfos; // New mapping for TradingInfo
     address public admin;
 
-    event UserRegistered(
-        address indexed userAddress,
-        string username,
-        int256 latitude,
-        int256 longitude,
-        uint256 energyBalance,
-        uint256 tokensBalance
-    );
-    event UserUpdated(
-        address indexed userAddress,
-        string username,
-        int256 latitude,
-        int256 longitude,
-        uint256 energyBalance,
-        uint256 tokensBalance
-    );
+    event UserRegistered(address indexed userAddress, string username, int256 latitude, int256 longitude, uint256 energyBalance, uint256 tokensBalance);
+    event UserUpdated(address indexed userAddress, string username, int256 latitude, int256 longitude, uint256 energyBalance, uint256 tokensBalance);
     event UserDeleted(address indexed userAddress);
 
     event SellingTradingInfoUpdated(
-        address indexed userAddress,
-        string tradingStatus,
-        uint256 expiryDate,
-        uint256 buySellAmount,
-        uint256 price
-    );
+    address indexed userAddress,
+    string tradingStatus,
+    uint256 expiryDate,
+    uint256 buySellAmount,
+    uint256 price
+);
 
-    event BuyingTradingInfoUpdated(
-        address indexed userAddress,
-        string tradingStatus,
-        uint256 expiryDate
-    );
+event BuyingTradingInfoUpdated(
+    address indexed userAddress,
+    string tradingStatus,
+    uint256 expiryDate
+);
+
+
 
     constructor() {
         admin = msg.sender; // The creator of the contract is the admin
@@ -70,13 +58,7 @@ contract Main {
         _;
     }
 
-    function registerUser(
-        string memory _username,
-        int256 _latitude,
-        int256 _longitude,
-        uint256 _energyBalance,
-        uint256 _tokensBalance
-    ) public notRegistered {
+    function registerUser(string memory _username, int256 _latitude, int256 _longitude, uint256 _energyBalance, uint256 _tokensBalance) public notRegistered {
         UserInfo storage newUser = users[msg.sender];
         newUser.username = _username;
         newUser.latitude = _latitude;
@@ -86,18 +68,11 @@ contract Main {
         newUser.isRegistered = true;
 
         userAddresses.push(msg.sender);
-        emit UserRegistered(
-            msg.sender,
-            _username,
-            _latitude,
-            _longitude,
-            _energyBalance,
-            _tokensBalance
-        );
+        emit UserRegistered(msg.sender, _username, _latitude, _longitude, _energyBalance, _tokensBalance);
         initializeTradingInfo(msg.sender);
     }
 
-    function initializeTradingInfo(address userAddress) internal {
+     function initializeTradingInfo(address userAddress) internal {
         TradingInfo storage newTradingInfo = tradingInfos[userAddress];
         newTradingInfo.userId = uint256(uint160(userAddress)); // Simple conversion from address to uint256
         newTradingInfo.tradingStatus = "NotTrading";
@@ -106,9 +81,7 @@ contract Main {
         newTradingInfo.expiryDate = 0; // Set to 0 to indicate uninitialized
     }
 
-    function getTradingInfoByUserId(
-        uint256 userId
-    ) public view returns (TradingInfo memory) {
+    function getTradingInfoByUserId(uint256 userId) public view returns (TradingInfo memory) {
         address userAddress = address(uint160(userId));
         require(users[userAddress].isRegistered, "User is not registered.");
 
@@ -116,12 +89,14 @@ contract Main {
     }
 
     function updateSellerUserInfo(
-        uint256 userId,
-        string memory _tradingStatus,
-        uint256 _expiryDate,
-        uint256 _buySellAmount,
+        uint256 userId, 
+        string memory _tradingStatus, 
+        uint256 _expiryDate, 
+        uint256 _buySellAmount, 
         uint256 _price
-    ) public {
+    ) 
+        public 
+    {
         address userAddress = address(uint160(userId));
         require(users[userAddress].isRegistered, "User is not registered.");
 
@@ -132,20 +107,17 @@ contract Main {
         userTradingInfo.price = _price;
 
         // Emit an event if necessary, for example:
-        emit SellingTradingInfoUpdated(
-            userAddress,
-            _tradingStatus,
-            _expiryDate,
-            _buySellAmount,
-            _price
-        );
+        emit SellingTradingInfoUpdated(userAddress, _tradingStatus, _expiryDate, _buySellAmount, _price);
     }
 
+
     function updateBuyerUserInfo(
-        uint256 userId,
-        string memory _tradingStatus,
+        uint256 userId, 
+        string memory _tradingStatus, 
         uint256 _expiryDate
-    ) public {
+    ) 
+        public 
+    {
         address userAddress = address(uint160(userId));
         require(users[userAddress].isRegistered, "User is not registered.");
 
@@ -157,13 +129,9 @@ contract Main {
         emit BuyingTradingInfoUpdated(userAddress, _tradingStatus, _expiryDate);
     }
 
-    function updateUser(
-        string memory _username,
-        int256 _latitude,
-        int256 _longitude,
-        uint256 _energyBalance,
-        uint256 _tokensBalance
-    ) public {
+
+
+    function updateUser(string memory _username, int256 _latitude, int256 _longitude, uint256 _energyBalance, uint256 _tokensBalance) public {
         require(users[msg.sender].isRegistered, "User is not registered.");
 
         UserInfo storage user = users[msg.sender];
@@ -173,14 +141,7 @@ contract Main {
         user.energyBalance = _energyBalance;
         user.tokensBalance = _tokensBalance;
 
-        emit UserUpdated(
-            msg.sender,
-            _username,
-            _latitude,
-            _longitude,
-            _energyBalance,
-            _tokensBalance
-        );
+        emit UserUpdated(msg.sender, _username, _latitude, _longitude, _energyBalance, _tokensBalance);
     }
 
     function deleteUser(address _userAddress) public onlyAdmin {
@@ -199,12 +160,11 @@ contract Main {
         }
     }
 
-    function getUserInfo(
-        address _userAddress
-    ) public view returns (UserInfo memory userInfo) {
+    function getUserInfo(address _userAddress) public view returns (UserInfo memory userInfo) {
         require(users[_userAddress].isRegistered, "User is not registered.");
         return users[_userAddress];
     }
+
 
     function getAllUsersInfo() public view returns (UserInfo[] memory) {
         UserInfo[] memory infos = new UserInfo[](userAddresses.length);
@@ -214,7 +174,7 @@ contract Main {
         }
         return infos;
     }
-
+    
     // Helper function to check if the user is registered
     function isUserRegistered(address _userAddress) public view returns (bool) {
         return users[_userAddress].isRegistered;
