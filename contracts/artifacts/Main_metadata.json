@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.24+commit.e11b9ed9"
+		"version": "0.8.20+commit.a1b79de6"
 	},
 	"language": "Solidity",
 	"output": {
@@ -299,6 +299,24 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_newEnergyBalance",
+						"type": "uint256"
+					}
+				],
+				"name": "updateEnergyBalance",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "string",
 						"name": "_username",
 						"type": "string"
@@ -402,11 +420,11 @@
 	},
 	"sources": {
 		"contracts/Main.sol": {
-			"keccak256": "0xb5b588815c16a3aae68edea663e288484875ab3b9f7dc5e2a6d4cbd30a8d0fe7",
+			"keccak256": "0x1695f464714bdf7e7d93f4abef7ce3a02d27f505abf36c44387ea3dfd66932c0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://dd1e1f4275e1c2b86fef1bf340b8adb8d9ed6aef52ea4febc4d4d3890d6dd524",
-				"dweb:/ipfs/QmdraxCnrCLQjvoxLACaUe2dXoeL4RQozkQi2YazgME3B2"
+				"bzz-raw://3fbdc586dac1b442785778a0cca171d8a27781b6ff8020d69d1adda33ec8e5c9",
+				"dweb:/ipfs/QmZxYCsu2gg6D3gJ6UFGFs3Zr5VnoumwKe5X2dvSdL9GZM"
 			]
 		}
 	},
