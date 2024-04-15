@@ -19,13 +19,6 @@ contract EnergyTransactionManager {
         uint initialDate;
         TransactionType transactionType;
     }
-    struct TradingInfo {
-        address userAddress;
-        string tradingStatus;
-        uint256 buySellAmount;
-        uint256 price;
-        uint256 expiryDate;
-    }
 
     enum TransactionType {
         Buy,
@@ -48,7 +41,6 @@ contract EnergyTransactionManager {
     mapping(uint => Transaction) public transactions;
     uint[] public pendingTransactions;
     uint[] private committedTransactions;
-    mapping(address => TradingInfo) public tradingInfos;
 
     event TransactionInitiated(
         uint transactionId,
@@ -59,13 +51,6 @@ contract EnergyTransactionManager {
         uint transactionId,
         bool accepted,
         string status
-    );
-    event TradingInfoUpdated(
-        address indexed userAddress,
-        string tradingStatus,
-        uint256 expiryDate,
-        uint256 buySellAmount,
-        uint256 price
     );
 
     constructor(address userManagerAddress) {
@@ -78,58 +63,16 @@ contract EnergyTransactionManager {
         _;
     }
 
-    function initializeTradingInfo(address userAddress) internal {
-        TradingInfo storage newTradingInfo = tradingInfos[userAddress];
-        newTradingInfo.userAddress = userAddress;
-        newTradingInfo.tradingStatus = "NotTrading";
-        newTradingInfo.buySellAmount = 0;
-        newTradingInfo.price = 0;
-        newTradingInfo.expiryDate = 0;
-    }
-
-    function getTradingInfo(
-        address userAddress
-    ) public view returns (TradingInfo memory) {
-        require(
-            userManager.isUserRegistered(userAddress),
-            "User is not registered."
-        );
-        return tradingInfos[userAddress];
-    }
-    function updateTradingUserInfo(
-        string memory _tradingStatus,
-        uint256 _expiryDate,
-        uint256 _buySellAmount,
-        uint256 _price
-    ) public {
-        require(
-            userManager.isUserRegistered(msg.sender),
-            "User is not registered."
-        );
-
-        TradingInfo storage userTradingInfo = tradingInfos[msg.sender];
-        userTradingInfo.tradingStatus = _tradingStatus;
-        userTradingInfo.expiryDate = _expiryDate;
-        userTradingInfo.buySellAmount = _buySellAmount;
-        userTradingInfo.price = _price;
-
-        emit TradingInfoUpdated(
-            msg.sender,
-            _tradingStatus,
-            _expiryDate,
-            _buySellAmount,
-            _price
-        );
-    }
     function getActiveTraders()
         public
         view
         returns (CombinedUserInfo[] memory)
     {
         uint activeCount = 0;
-        address[] memory userAddresses = userManager.getUserAddresses(); // Assume a function to get all user addresses
+        address[] memory userAddresses = userManager.getUserAddresses();
         for (uint i = 0; i < userAddresses.length; i++) {
-            TradingInfo memory tradingInfo = tradingInfos[userAddresses[i]];
+            UserManager.TradingInfo memory tradingInfo = userManager
+                .getTradingInfo(userAddresses[i]);
             if (isTradingActive(tradingInfo.tradingStatus)) {
                 activeCount++;
             }
@@ -141,7 +84,8 @@ contract EnergyTransactionManager {
         uint currentIndex = 0;
         for (uint i = 0; i < userAddresses.length; i++) {
             address userAddress = userAddresses[i];
-            TradingInfo memory tradingInfo = tradingInfos[userAddress];
+            UserManager.TradingInfo memory tradingInfo = userManager
+                .getTradingInfo(userAddress);
             if (isTradingActive(tradingInfo.tradingStatus)) {
                 (
                     ,
@@ -333,13 +277,7 @@ contract EnergyTransactionManager {
         removePendingTransaction(_transactionId);
         committedTransactions.push(_transactionId);
 
-        TradingInfo storage userTradingInfo = tradingInfos[
-            transactions[_transactionId].receiver
-        ];
-        userTradingInfo.tradingStatus = "NotTrading";
-        userTradingInfo.expiryDate = 0;
-        userTradingInfo.buySellAmount = 0;
-        userTradingInfo.price = 0;
+        userManager.resetTradingInfo(transactions[_transactionId].receiver);
 
         emit TransactionCommitted(
             _transactionId,

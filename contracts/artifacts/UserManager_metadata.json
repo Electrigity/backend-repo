@@ -24,6 +24,43 @@
 						"internalType": "address",
 						"name": "userAddress",
 						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "tradingStatus",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "expiryDate",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "buySellAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					}
+				],
+				"name": "TradingInfoUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
 					}
 				],
 				"name": "UserDeleted",
@@ -236,6 +273,52 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					}
+				],
+				"name": "getTradingInfo",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "userAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "tradingStatus",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "buySellAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "price",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "expiryDate",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct UserManager.TradingInfo",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "getUserAddresses",
 				"outputs": [
@@ -376,6 +459,19 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					}
+				],
+				"name": "initializeTradingInfo",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "_userAddress",
 						"type": "address"
 					}
@@ -415,6 +511,19 @@
 					}
 				],
 				"name": "registerUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					}
+				],
+				"name": "resetTradingInfo",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -554,6 +663,34 @@
 					}
 				],
 				"name": "updateTokenBalance",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_tradingStatus",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_expiryDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_buySellAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_price",
+						"type": "uint256"
+					}
+				],
+				"name": "updateTradingUserInfo",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -736,11 +873,11 @@
 			]
 		},
 		"contracts/userManager.sol": {
-			"keccak256": "0x7ab2ace7a894d44bc47e0e77de43d916b78b26d58aff54618a815316a1d05023",
+			"keccak256": "0xabb5fd82a5808f0c99f632e206d7fd408903b73a9cc379c0a826eb242bc02783",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://443f50f0b0c8378dc86f6330b0013ec40889d6b953080964c66ebb67b2299532",
-				"dweb:/ipfs/QmcYgxHug8EdycdwfJJpR4DqkhiXcr9cxMZEVzZ7R6LkKp"
+				"bzz-raw://964fac90e76197c4a0ca0d5a27961d1c16c685a6d64c4322d7e3d90862cf4260",
+				"dweb:/ipfs/QmdMU3UYt3jkYwCnQgMxAgNHp9pBEd9QUaoSyv55E9zTyb"
 			]
 		}
 	},

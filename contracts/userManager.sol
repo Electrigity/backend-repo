@@ -44,7 +44,13 @@ contract UserManager {
         uint256 energyBalance
     );
     event UserDeleted(address indexed userAddress);
-
+    event TradingInfoUpdated(
+        address indexed userAddress,
+        string tradingStatus,
+        uint256 expiryDate,
+        uint256 buySellAmount,
+        uint256 price
+    );
     constructor(address tokenAddress) {
         admin = msg.sender;
         token = MyERC20(tokenAddress);
@@ -66,6 +72,7 @@ contract UserManager {
         int _longitude,
         uint256 _energyBalance
     ) public notRegistered {
+        require(!users[msg.sender].isRegistered, "User already registered.");
         UserInfo storage newUser = users[msg.sender];
         newUser.userAddress = msg.sender;
         newUser.username = _username;
@@ -88,6 +95,50 @@ contract UserManager {
         initializeTradingInfo(msg.sender);
     }
 
+    function initializeTradingInfo(address userAddress) public {
+        TradingInfo storage newTradingInfo = tradingInfos[userAddress];
+        newTradingInfo.userAddress = userAddress;
+        newTradingInfo.tradingStatus = "NotTrading";
+        newTradingInfo.buySellAmount = 0;
+        newTradingInfo.price = 0;
+        newTradingInfo.expiryDate = 0;
+    }
+
+    function getTradingInfo(
+        address userAddress
+    ) public view returns (TradingInfo memory) {
+        require(users[userAddress].isRegistered, "User is not registered.");
+        return tradingInfos[userAddress];
+    }
+    function updateTradingUserInfo(
+        string memory _tradingStatus,
+        uint256 _expiryDate,
+        uint256 _buySellAmount,
+        uint256 _price
+    ) public {
+        require(users[msg.sender].isRegistered, "User is not registered.");
+
+        TradingInfo storage userTradingInfo = tradingInfos[msg.sender];
+        userTradingInfo.tradingStatus = _tradingStatus;
+        userTradingInfo.expiryDate = _expiryDate;
+        userTradingInfo.buySellAmount = _buySellAmount;
+        userTradingInfo.price = _price;
+
+        emit TradingInfoUpdated(
+            msg.sender,
+            _tradingStatus,
+            _expiryDate,
+            _buySellAmount,
+            _price
+        );
+    }
+    function resetTradingInfo(address userAddress) public {
+        TradingInfo storage userTradingInfo = tradingInfos[userAddress];
+        userTradingInfo.tradingStatus = "NotTrading";
+        userTradingInfo.expiryDate = 0;
+        userTradingInfo.buySellAmount = 0;
+        userTradingInfo.price = 0;
+    }
     function updateUser(
         string memory _username,
         int _latitude,
@@ -159,14 +210,7 @@ contract UserManager {
     ) public view returns (uint256) {
         return token.balanceOf(userAddress);
     }
-    function initializeTradingInfo(address userAddress) internal {
-        TradingInfo storage newTradingInfo = tradingInfos[userAddress];
-        newTradingInfo.userAddress = userAddress;
-        newTradingInfo.tradingStatus = "NotTrading";
-        newTradingInfo.buySellAmount = 0;
-        newTradingInfo.price = 0;
-        newTradingInfo.expiryDate = 0;
-    }
+
     function getUserInfo(
         address _userAddress
     ) public view returns (UserInfo memory userInfo) {
@@ -201,10 +245,6 @@ contract UserManager {
         return users[user].energyBalance;
     }
     function approveTokens(address spender, uint256 amount) public {
-        require(
-            msg.sender == admin,
-            "Only admin can approve tokens for spending."
-        );
         token.approve(spender, amount);
     }
 

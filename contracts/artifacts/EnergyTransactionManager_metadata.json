@@ -20,43 +20,6 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "userAddress",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "tradingStatus",
-						"type": "string"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "expiryDate",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "buySellAmount",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "price",
-						"type": "uint256"
-					}
-				],
-				"name": "TradingInfoUpdated",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "transactionId",
@@ -401,52 +364,6 @@
 						"type": "address"
 					}
 				],
-				"name": "getTradingInfo",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "address",
-								"name": "userAddress",
-								"type": "address"
-							},
-							{
-								"internalType": "string",
-								"name": "tradingStatus",
-								"type": "string"
-							},
-							{
-								"internalType": "uint256",
-								"name": "buySellAmount",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "price",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "expiryDate",
-								"type": "uint256"
-							}
-						],
-						"internalType": "struct EnergyTransactionManager.TradingInfo",
-						"name": "",
-						"type": "tuple"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "userAddress",
-						"type": "address"
-					}
-				],
 				"name": "getUserCommittedTransactions",
 				"outputs": [
 					{
@@ -556,45 +473,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "tradingInfos",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "userAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "tradingStatus",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "buySellAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "price",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "expiryDate",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -654,34 +532,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_tradingStatus",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_expiryDate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_buySellAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_price",
-						"type": "uint256"
-					}
-				],
-				"name": "updateTradingUserInfo",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -798,19 +648,19 @@
 			]
 		},
 		"contracts/UserManager.sol": {
-			"keccak256": "0x7ab2ace7a894d44bc47e0e77de43d916b78b26d58aff54618a815316a1d05023",
+			"keccak256": "0xabb5fd82a5808f0c99f632e206d7fd408903b73a9cc379c0a826eb242bc02783",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://443f50f0b0c8378dc86f6330b0013ec40889d6b953080964c66ebb67b2299532",
-				"dweb:/ipfs/QmcYgxHug8EdycdwfJJpR4DqkhiXcr9cxMZEVzZ7R6LkKp"
+				"bzz-raw://964fac90e76197c4a0ca0d5a27961d1c16c685a6d64c4322d7e3d90862cf4260",
+				"dweb:/ipfs/QmdMU3UYt3jkYwCnQgMxAgNHp9pBEd9QUaoSyv55E9zTyb"
 			]
 		},
 		"contracts/energyTransactionManager .sol": {
-			"keccak256": "0x7d61b9ec87c6c2e0edb22957aa698110a0e44e3fa5569bdffff0007746961f4b",
+			"keccak256": "0xa237911f1727dcec6e1dba9828e020c6aebd62657b51203cc6f9e53875e24356",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d31d79de422308997386e44289daa3740ea1ea502765e55525a9562ee0891c49",
-				"dweb:/ipfs/Qmb81qFEhsmYQFkzAALSWHW3hwW5pC5b1Ld7ZbkwX1sfvf"
+				"bzz-raw://8b36158e3ed95719f719f497c263c95747a110f659fa144f64df3118c2ce1545",
+				"dweb:/ipfs/QmZ3gp3piTTebdhyUiF8hTPK9kvme215oSKnsyS1Eq2xjJ"
 			]
 		}
 	},
