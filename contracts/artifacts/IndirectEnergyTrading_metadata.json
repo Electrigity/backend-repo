@@ -1,0 +1,434 @@
+{
+	"compiler": {
+		"version": "0.8.24+commit.e11b9ed9"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "userManagerAddress",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "OrderCancelled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "energyAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isBuyOrder",
+						"type": "bool"
+					}
+				],
+				"name": "OrderPlaced",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tradeId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "seller",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "averagePrice",
+						"type": "uint256"
+					}
+				],
+				"name": "TradeMatched",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "buyOrderIds",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orderId",
+						"type": "uint256"
+					}
+				],
+				"name": "cancelOrder",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getTradeHistory",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "buyer",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "seller",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "averagePrice",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "energyAmount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IndirectEnergyTrading.Trade[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "matchOrders",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "nextOrderId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "nextTradeId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "orders",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "energyAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isBuyOrder",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_energyAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "_isBuyOrder",
+						"type": "bool"
+					}
+				],
+				"name": "placeOrder",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "sellOrderIds",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "tradeHistory",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "seller",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "averagePrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "energyAmount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/inDirectTrading.sol": "IndirectEnergyTrading"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
+			"keccak256": "0x60c65f701957fdd6faea1acb0bb45825791d473693ed9ecb34726fdfaa849dd7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ea290300e0efc4d901244949dc4d877fd46e6c5e43dc2b26620e8efab3ab803f",
+				"dweb:/ipfs/QmcLLJppxKeJWqHxE2CUkcfhuRTgHSn8J4kijcLa5MYhSt"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+			"keccak256": "0xc3e1fa9d1987f8d349dfb4d6fe93bf2ca014b52ba335cfac30bfe71e357e6f80",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c5703ccdeb7b1d685e375ed719117e9edf2ab4bc544f24f23b0d50ec82257229",
+				"dweb:/ipfs/QmTdwkbQq7owpCiyuzE7eh5LrD2ddrBCZ5WHVsWPi1RrTS"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0ea104e577e63faea3b69c415637e99e755dcbf64c5833d7140c35a714d6d90c",
+				"dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+			"keccak256": "0xaa761817f6cd7892fcf158b3c776b34551cde36f48ff9703d53898bc45a94ea2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0ad7c8d4d08938c8dfc43d75a148863fb324b80cf53e0a36f7e5a4ac29008850",
+				"dweb:/ipfs/QmcrhfPgVNf5mkdhQvy1pMv51TFokD3Y4Wa5WZhFqVh8UV"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol": {
+			"keccak256": "0x6008dabfe393240d73d7dd7688033f72740d570aa422254d29a7dce8568f3aff",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f5196ec75139918c6c7bb4251b36395e668f1fa6d206beba7e7520e74913940d",
+				"dweb:/ipfs/QmSyqjksXxmm2mCG6qRd1yuwLykypkSVBbnBnGqJRcuJMi"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+			"keccak256": "0x37bb49513c49c87c4642a891b13b63571bc87013dde806617aa1efb54605f386",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b3036b3a83b7c48f96641f2a9002b9f2dcb6a5958dd670894ada21ae8229b3d0",
+				"dweb:/ipfs/QmUNfSBdoVtjhETaUJCYcaC7pTMgbhht926tJ2uXJbiVd3"
+			]
+		},
+		"@openzeppelin/contracts/utils/Address.sol": {
+			"keccak256": "0xaf28a975a78550e45f65e559a3ad6a5ad43b9b8a37366999abd1b7084eb70721",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b7bd24e224f67f65bfadf85dc2929fa965456bb2415478bd0125471b5ce35245",
+				"dweb:/ipfs/QmRaydGr8BTHs1kvaZfsNU69pKzUAGFrvABn1KiRSbE51y"
+			]
+		},
+		"@openzeppelin/contracts/utils/Context.sol": {
+			"keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12",
+				"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF"
+			]
+		},
+		"contracts/MyERC20.sol": {
+			"keccak256": "0x6d829e462891b5b6d129c4e7216bd29c1196915b09464bf8ef748c3797bb895d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://93f8ae875bf5036ed1a7e28ae8a7cc4403656c648a3b3f02262026b20181fc8a",
+				"dweb:/ipfs/Qmdv3tVwKdtbcnEnou47T8oiEvRwoWhPVqEDeS2joWAy4U"
+			]
+		},
+		"contracts/UserManager.sol": {
+			"keccak256": "0xabb5fd82a5808f0c99f632e206d7fd408903b73a9cc379c0a826eb242bc02783",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://964fac90e76197c4a0ca0d5a27961d1c16c685a6d64c4322d7e3d90862cf4260",
+				"dweb:/ipfs/QmdMU3UYt3jkYwCnQgMxAgNHp9pBEd9QUaoSyv55E9zTyb"
+			]
+		},
+		"contracts/inDirectTrading.sol": {
+			"keccak256": "0x3ce455054fe71bb15bb8b1b6262b832e1cb1cb8427653ede57d602369985dec3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://21766120046b63c210aa34eb993cb72dbcef1bef1345f750671212924280a5a4",
+				"dweb:/ipfs/QmPCpbi4JBH7svCAEdAJmMF8tqDr2acvE9m2nZRgcsS6uk"
+			]
+		}
+	},
+	"version": 1
+}
