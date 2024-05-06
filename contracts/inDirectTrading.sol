@@ -33,6 +33,7 @@ contract IndirectEnergyTrading {
         address seller;
         uint averagePrice;
         uint energyAmount;
+        uint timestamp;
     }
 
     uint public nextTradeId = 1;
@@ -107,7 +108,12 @@ contract IndirectEnergyTrading {
 
             if (buyOrder.energyAmount == sellOrder.energyAmount) {
                 uint averagePrice = (buyOrder.price + sellOrder.price) / 2;
-                executeTrade(buyOrder.user, sellOrder.user, averagePrice, buyOrder.energyAmount);
+                executeTrade(
+                    buyOrder.user,
+                    sellOrder.user,
+                    averagePrice,
+                    buyOrder.energyAmount
+                );
                 removeOrder(
                     buyOrderIds,
                     findIndex(buyOrderIds, filteredBuyIds[i])
@@ -214,17 +220,108 @@ contract IndirectEnergyTrading {
                 buyer: buyer,
                 seller: seller,
                 averagePrice: averagePrice,
-                energyAmount: energyAmount
+                energyAmount: energyAmount,
+                timestamp: block.timestamp
             })
         );
         emit TradeMatched(nextTradeId++, buyer, seller, averagePrice);
     }
-    function getTradeHistory() public view returns (Trade[] memory) {
-        return tradeHistory;
+    function getTradeHistoryForAddress(
+        address userAddress
+    ) public view returns (Trade[] memory) {
+        uint relevantTradeCount = 0;
+        for (uint i = 0; i < tradeHistory.length; i++) {
+            if (
+                tradeHistory[i].buyer == userAddress ||
+                tradeHistory[i].seller == userAddress
+            ) {
+                relevantTradeCount++;
+            }
+        }
+
+        Trade[] memory filteredTrades = new Trade[](relevantTradeCount);
+        uint counter = 0;
+        for (uint i = 0; i < tradeHistory.length; i++) {
+            if (
+                tradeHistory[i].buyer == userAddress ||
+                tradeHistory[i].seller == userAddress
+            ) {
+                filteredTrades[counter++] = tradeHistory[i];
+            }
+        }
+        return filteredTrades;
+    }
+
+    function averageOrderPrice()
+        public
+        view
+        returns (uint averageBuyPrice, uint averageSellPrice)
+    {
+        uint totalBuyPrice = 0;
+        uint totalSellPrice = 0;
+
+        for (uint i = 0; i < buyOrderIds.length; i++) {
+            totalBuyPrice += orders[buyOrderIds[i]].price;
+        }
+        for (uint j = 0; j < sellOrderIds.length; j++) {
+            totalSellPrice += orders[sellOrderIds[j]].price;
+        }
+
+        averageBuyPrice = buyOrderIds.length > 0
+            ? totalBuyPrice / buyOrderIds.length
+            : 0;
+        averageSellPrice = sellOrderIds.length > 0
+            ? totalSellPrice / sellOrderIds.length
+            : 0;
+
+        return (averageBuyPrice, averageSellPrice);
     }
 
     function removeOrder(uint[] storage orderList, uint orderId) private {
         orderList[orderId] = orderList[orderList.length - 1];
         orderList.pop();
+    }
+
+    function numberOfUsers()
+        public
+        view
+        returns (uint numberOfBuyers, uint numberOfSellers)
+    {
+        address[] memory countedBuyers = new address[](buyOrderIds.length);
+        address[] memory countedSellers = new address[](sellOrderIds.length);
+        uint buyerCount = 0;
+        uint sellerCount = 0;
+
+        for (uint i = 0; i < buyOrderIds.length; i++) {
+            address buyer = orders[buyOrderIds[i]].user;
+            bool alreadyCounted = false;
+            for (uint j = 0; j < buyerCount; j++) {
+                if (countedBuyers[j] == buyer) {
+                    alreadyCounted = true;
+                    break;
+                }
+            }
+            if (!alreadyCounted) {
+                countedBuyers[buyerCount] = buyer;
+                buyerCount++;
+            }
+        }
+
+        for (uint i = 0; i < sellOrderIds.length; i++) {
+            address seller = orders[sellOrderIds[i]].user;
+            bool alreadyCounted = false;
+            for (uint j = 0; j < sellerCount; j++) {
+                if (countedSellers[j] == seller) {
+                    alreadyCounted = true;
+                    break;
+                }
+            }
+            if (!alreadyCounted) {
+                countedSellers[sellerCount] = seller;
+                sellerCount++;
+            }
+        }
+
+        return (buyerCount, sellerCount);
     }
 }

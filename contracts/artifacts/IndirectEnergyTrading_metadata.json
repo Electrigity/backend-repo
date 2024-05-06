@@ -104,6 +104,24 @@
 				"type": "event"
 			},
 			{
+				"inputs": [],
+				"name": "averageOrderPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "averageBuyPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "averageSellPrice",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -136,8 +154,14 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "getTradeHistory",
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					}
+				],
+				"name": "getTradeHistoryForAddress",
 				"outputs": [
 					{
 						"components": [
@@ -159,6 +183,11 @@
 							{
 								"internalType": "uint256",
 								"name": "energyAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
 								"type": "uint256"
 							}
 						],
@@ -197,6 +226,24 @@
 					{
 						"internalType": "uint256",
 						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "numberOfUsers",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "numberOfBuyers",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "numberOfSellers",
 						"type": "uint256"
 					}
 				],
@@ -307,6 +354,11 @@
 					{
 						"internalType": "uint256",
 						"name": "energyAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
 						"type": "uint256"
 					}
 				],
@@ -422,11 +474,11 @@
 			]
 		},
 		"contracts/inDirectTrading.sol": {
-			"keccak256": "0x3ce455054fe71bb15bb8b1b6262b832e1cb1cb8427653ede57d602369985dec3",
+			"keccak256": "0x16ffd20d5e41d236a27eb22800b47568ce4778c7d0f19ab9655616efd5f251e5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://21766120046b63c210aa34eb993cb72dbcef1bef1345f750671212924280a5a4",
-				"dweb:/ipfs/QmPCpbi4JBH7svCAEdAJmMF8tqDr2acvE9m2nZRgcsS6uk"
+				"bzz-raw://857b768f28e2a82da5334418f2ac172cc226ac416c2a4fdfd66417b2e64a620d",
+				"dweb:/ipfs/QmQYXgYX2S6pVMrQSKLjWrW8xch9stJisD9rZUzYkqAD2c"
 			]
 		}
 	},
