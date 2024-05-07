@@ -42,6 +42,7 @@ contract IndirectEnergyTrading {
     uint[] public buyOrderIds;
     uint[] public sellOrderIds;
     Trade[] public tradeHistory;
+    mapping(address => uint) public userOrder;
 
     constructor(address userManagerAddress) {
         userManager = UserManager(userManagerAddress);
@@ -58,6 +59,10 @@ contract IndirectEnergyTrading {
         );
         require(_energyAmount > 0, "Energy amount must be greater than zero.");
         require(_price > 0, "Price must be greater than zero.");
+        require(
+            userOrder[msg.sender] == 0,
+            "User already has an active order."
+        );
 
         Order memory newOrder = Order({
             user: msg.sender,
@@ -67,6 +72,8 @@ contract IndirectEnergyTrading {
         });
 
         orders[nextOrderId] = newOrder;
+        userOrder[msg.sender] = nextOrderId;
+
         if (_isBuyOrder) {
             buyOrderIds.push(nextOrderId);
         } else {
@@ -83,11 +90,18 @@ contract IndirectEnergyTrading {
         nextOrderId++;
     }
 
-    function cancelOrder(uint orderId) public {
+    function cancelOrder() public {
+        uint orderId = userOrder[msg.sender];
+        require(orderId != 0, "No active order to cancel.");
+
         Order memory order = orders[orderId];
 
-        removeOrder(order.isBuyOrder ? buyOrderIds : sellOrderIds, orderId);
+        removeOrder(
+            order.isBuyOrder ? buyOrderIds : sellOrderIds,
+            findIndex(order.isBuyOrder ? buyOrderIds : sellOrderIds, orderId)
+        );
         delete orders[orderId];
+        userOrder[msg.sender] = 0;
 
         emit OrderCancelled(orderId, msg.sender);
     }
@@ -323,5 +337,10 @@ contract IndirectEnergyTrading {
         }
 
         return (buyerCount, sellerCount);
+    }
+    function getOrderDetails(address user) public view returns (Order memory) {
+        uint orderId = userOrder[user];
+        require(orderId != 0, "User has no active order.");
+        return orders[orderId];
     }
 }
