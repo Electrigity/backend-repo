@@ -5,6 +5,7 @@ import "./UserManager.sol";
 
 contract IndirectEnergyTrading {
     UserManager userManager;
+    uint public intervalTimestamp = 0;
 
     event TradeMatched(
         uint indexed tradeId,
@@ -46,6 +47,13 @@ contract IndirectEnergyTrading {
 
     constructor(address userManagerAddress) {
         userManager = UserManager(userManagerAddress);
+    }
+
+    function setTimestamp(uint _timestamp) public {
+        intervalTimestamp = _timestamp;
+    }
+    function getTimestamp() public view returns (uint) {
+        return intervalTimestamp;
     }
 
     function placeOrder(
@@ -239,6 +247,8 @@ contract IndirectEnergyTrading {
             })
         );
         emit TradeMatched(nextTradeId++, buyer, seller, averagePrice);
+        userOrder[buyer] = 0;
+        userOrder[seller] = 0;
     }
     function getTradeHistoryForAddress(
         address userAddress

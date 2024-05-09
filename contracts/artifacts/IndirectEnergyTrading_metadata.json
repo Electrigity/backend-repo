@@ -189,6 +189,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "getTimestamp",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -229,6 +242,19 @@
 						"internalType": "struct IndirectEnergyTrading.Trade[]",
 						"name": "",
 						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "intervalTimestamp",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -359,6 +385,19 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "setTimestamp",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -528,11 +567,11 @@
 			]
 		},
 		"contracts/inDirectTrading.sol": {
-			"keccak256": "0x742f9a79daff3fe36c5f14975e483f74b43b77a1719f1d506d6d9aebfdcdef76",
+			"keccak256": "0x59ac627baa26704e3a780cf20912d50499b28b7a50fd7ce35f9fb33c966019bf",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9356684b009b5653e8e8c880c303c142446224ad4b8f0e0a6da5b21b5d12ae4a",
-				"dweb:/ipfs/QmTTH4QEV2kcaVdRYYezhwoZxrZbPSaNUSCwAUAawySv9j"
+				"bzz-raw://aeabec3a2a94fbf5cde9fed1d0a4c5f510f81d508c8736e67766a1ef7bef9d6e",
+				"dweb:/ipfs/QmWyRPuCHa5vtM18gYYaTuCi6ouxuGreU3zjh6XzHdVEnp"
 			]
 		}
 	},
